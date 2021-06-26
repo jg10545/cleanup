@@ -12,7 +12,14 @@ import logging
 
 def get_distance_matrix(model, testdata):
     """
+    Generate a matrix of "distances" for test dataset with respect to an
+    ensemble model- where pairs of data points that were frequently assigned
+    to the same leaf should have a lower distance.
     
+    :model: a trained sklearn RandomForestRegressor model
+    :testdata: an (N,d) numpy array of training data
+    
+    Returns an (N,N) array of pairwise distances.
     """
     # <--- snip
     N = testdata.shape[0]
@@ -38,7 +45,18 @@ def get_distance_matrix(model, testdata):
 
 def random_forest_embeddings(X_train, X_test, Y_train, Y_test, n_estimators=100):
     """
+    Train a random forest regressor, find pairwise distances for a similarity
+    plot and return T-SNE embeddings.
     
+    :X_train: (N,d) numpy array of training covariates
+    :X_test: (N_t, d) numpy array of test covariates
+    :Y_train: (N,) numpy array of training labels
+    :Y_test: (N_t,) numpy array of test labels
+    :n_estimators: number of trees for the ensemble model
+    
+    Returns
+    :embeddings: (N_t, 2) numpy array of T-SNE embeddings for each test point.
+    :residuals: (N_t,) numpy array of model prediction residuals for each test point.
     """
     # <-- snip
     logging.info(f"training random forest regressor with {n_estimators} trees")    
