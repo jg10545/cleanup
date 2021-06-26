@@ -71,6 +71,7 @@ Note that we're not actually adding any new functionality or capabilities to the
 * **It's easier to test.** Breaking your code out into small pieces and testing them will help make sure you're not reusing typos.
 * **It's easier to mix and match.** If, for example, your data comes in a different format next time, just add a function to ``load.py`` and reuse the rest.
 
+
 4. Add some guardrails with ``logging``
 =======================================
 
@@ -85,10 +86,36 @@ There's a lot you can do with ``logging`` but I want to flag a couple specific p
 
 * **Don't use ``print()`` for debugging.** I'm really bad about this. I'll add `print()` statements to my code to check values or dimensions of arrays to make sure everything's doing what I expect it to. Then when it works, I comment them out or remove them all manually until I need them again. A better approach is to replace ``print("current value of myvar: %s"%myvar")`` with ``logging.debug("current value of myvar: %s"%myvar")``. That way you can turn them all off or on at once by setting the logging level to ``logging.DEBUG``.
 
-* **Warn your user if they're doing something you didn't plan for.** Frequently you'll make assumptions about the data being passed around in your code (how big it is, data types, etc); if the user passes something different through it might not be *wrong* but it's probably worth leaving them a note to check.
+* **Warn your user if they're doing something you didn't plan for.** Frequently you'll make assumptions about the data being passed around in your code (how big it is, data types, etc); if the user passes something different through it might not be *wrong* but it's probably worth leaving them a note to check. Use ``logging.warn("warning message here")``.
 
-Generally the dumbest user of my code is me, six months from now.
+Generally the dumbest user of my code is me, six months from now. I've saved myself a lot of time by adding warnings.
 
+5. Simple unit tests
+====================
+
+Now let's start adding unit tests. The basic idea here is to write some simple test code for each of your functions to make sure they return the right answers. Running ``pytest`` from the command line to collect and run all the tests, and tell you if any failed. This way, whenever you make changes to your code, there's a **super easy** way to check whether you've accidentally broken something.
+
+To get you started, I've added a ``tests`` folder to ``cleanup`` and added one Python file for each file in the repo: ``test_load.py``, ``test_model.py``, and ``test_plot.py``. And I've thrown some skeleton code in all of them.
+
+For now, start with ``tests/test_model.py``. I wrote one unit test for you as an example; you write the other. 
+
+6. Unit tests with fixtures
+===========================
+
+Parts of our code read from and write to file- ``pytest`` provides some tools to help test that stuff as well.
+
+For testing the code in ``load.py``, we need to add a **fixture-** in this case, a small example data file that looks more-or-less like the kind of data we plan on loading in real life.
+
+* Generate a CSV with a few lines of fake data but the same columns as our dataset.
+* Save the file to ``cleanup/tests/fixtures/fakedata.csv``
+* Set up the fixture inside ``cleanup/tests/conftest.py``. (I've already filled this part out for you).
+* Now you can finally write the unit test for the ``load_and_preprocess()`` function in ``load.py``. When you write the test function, pass ``test_csv`` as an argument and ``pytest``will automatically fill in the location of ``fakedata.csv``.
+
+**Why can't I just hard-code the path to ``fakedata.csv`` in my unit test?** You totally could, and it would work for you. But if you move your code to another machine and the path changes, the unit test will break. Same problem if someone else clones your repo, or if you set up continuous integration with Github actions or Jenkins.
+
+**What about writing to file?** Testing the ability to save our figure to disk is a bit easier- ``pytest`` comes with a built-in fixture called ``tmpdir``. When you run ``pytest``, it will create a temporary directory within your system's default temp directory (e.g. ``/tmp`` on Linux), pass the location of that directory to the unit test, and then delete it all when the tests are done running. 
+
+If you're not a full-time developer, adding fixtures to a repo might be something you do once or twice a year. I have to look up how every time. But when you have that you're reusing and you want to be sure you can rely on it, spending a few minutes on the ``pytest`` documentation page isn't a huge effort.
 
 
 * Free software: MIT license
