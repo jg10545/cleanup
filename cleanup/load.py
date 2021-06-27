@@ -15,15 +15,25 @@ def load_and_preprocess(filepath, target_col="price", split=0.1):
     Load a CSV file containing our data, preprocess it, and split into train
     and test components.
     
-    :filepath: string; path to CSV file
-    :target_col: string; name of column containing our dependent variable
-    :split: float; fraction of data to devote to testing
+    Parameters
+    ----------
+    filepath: string 
+        path to CSV file
+    target_col: string, optional
+        name of column containing our dependent variable
+    split: float, optional 
+        fraction of data to devote to testing
     
     Returns
-    :X_train: 2D numpy array of training examples
-    :X_test: 2D numpy array of test examples
-    :Y_train: 1D numpy array of training labels
-    :Y_test: 1D numpy array of test labels
+    -------
+    numpy array
+        2D numpy array of training examples
+    numpy array
+        2D numpy array of test examples
+    numpy array
+        1D numpy array of training labels
+    numpy array
+        1D numpy array of test labels
     """
     # <--- snip
     df = pd.read_csv(filepath)

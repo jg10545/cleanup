@@ -15,15 +15,24 @@ def build_embedding_figure(embeddings, residuals, threshold=1, alpha=0.5, save=F
     """
     Use matplotlib to visualize embeddings
     
-    :embeddings: (N,2) numpy array of T-SNE (or other) embeddings
-    :residuals: (N,) numpy array of model test residuals
-    :threshold: float; examples with residuals whose magnitude is greater than
+    Parameters
+    ----------
+    embeddings: numpy array
+        (N,2) numpy array of T-SNE (or other) embeddings
+    residuals: numpy array 
+        (N,) numpy array of model test residuals
+    threshold: float, optional 
+        examples with residuals whose magnitude is greater than
         this threshold are considered "large error"
-    :alpha: transparency value for plotting
-    :save: add a filepath here to save figure to file instead of returning
+    alpha: float, optional
+        transparency value for plotting
+    save: str, optional
+        add a filepath here to save figure to file instead of returning
     
     Returns
-    :fig: matplotlib Figure, unless save != False
+    -------
+    matplotlib.figure.Figure
+        matplotlib Figure, unless save != False
     """
     # <--- snip
     high_error = np.abs(residuals) > 1
