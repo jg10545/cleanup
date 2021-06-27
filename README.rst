@@ -120,11 +120,11 @@ If you're not a full-time developer, adding fixtures to a repo might be somethin
 7. Build a simple command-line interface
 ========================================
 
-Let's take what we've built
+If your code automates simple workflows that you repeat frequently, a command-line interface is a nice convenience. Alternately, if you're coding for users who aren't comfortable working in Python, a CLI has a slightly-lower barrier to entry than, say, telling them to use Jupyter (and a lot less work than building a GUI).
 
 The ``argparse`` library comes with Python and is a really easy tool for building simple CLIs. If you want to build complex CLIs (for example, to make interfaces you can compose between different packages), the ``click`` package provides more functionality (but is also significantly more complicated).
 
-I've built a simple CLI in the file ``cli.py``- it uses ``argparse`` to parse the user's inputs, then just runs through the code we built above (if you used different function names or inputs, you'll have to update them in this file).
+I've built a simple CLI in the file ``cli.py``, using ``argparse`` to parse the user's inputs, then just runs through the code we built above (if you used different function names or inputs, you'll have to update them in this file).
 
 If you run the following from the command line:
 
@@ -134,15 +134,36 @@ If you run the following from the command line:
 
 >>> python cli.py my_data.csv --outputfile my_figure.jpg --logging DEBUG
 
-The ``parser.add_argument()`` lines in ``cli.py`` are how you'd add additional options to the interface. 
+Once you've tested it out, try adding more options to the CLI. There are some options in our code that would be useful to expose in the CLI (such as the name of the target column in your data, or the fraction to use for testing). The ``parser.add_argument()`` lines in ``cli.py`` are how you'd add additional options to the interface. 
 
 * Options with a ``--`` in front of the name are optional; use the ``default`` keyword argument to specify the default.
 * The ``help`` keyword argument tells ``argparse`` what to print out when you run the CLI with the ``--help`` flag.
-* The ``dtype`` keyword argument tells ``argparse`` what type of input to expect. Even though Python usually lets us play fast and loose with data types, I recommend always filling this in when you're using ``argparse``. 
+* The ``dtype`` keyword argument tells ``argparse`` what type of input to expect. Even though Python usually lets us play fast and loose with data types, I recommend always filling this in when you're using ``argparse``. It's not always great at inferring types, and when it guesses wrong your code will do weird stuff (for example, passing "False" to a CLI argument will default to the string variable ``"False"`` instead of the Boolean variable ``False``, which is *super* problematic since ``bool("False") == True``).
 
-*
+8. Make the CLI fancier using entry points
+==========================================
 
+Once you've built your CLI, we can easily make it accessible without having to always go to the directory where your python script is. All we have to do is:
 
+* Move ``cli.py`` into the ``cleanup`` directory
+* Add an entry point to ``setup.py``
+* Use ``setup.py`` or ``pip`` to install the package.
+
+Once you've moved ``clip.py``, here's what to add to ``setup.py`` to create the entry point:
+
+>>> entry_points={
+    'console_scripts': [
+        'randomforestplot = cleanup.cli:main',
+    ],
+    }
+
+This tells it to create a command-line function called ``randomforestplot`` that runs the ``main()`` function inside ``cleanup/cli.py``. When you've added this, install your package with:
+
+>>> pip install . --no-deps
+
+Now you should be able to run the CLI from anywhere, so long as your conda environment is active:
+
+>>> randomforestplot path/to/data.csv --outputfile myplot.jpg --logging INFO
 
 
 * Free software: MIT license
