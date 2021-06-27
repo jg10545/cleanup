@@ -99,6 +99,8 @@ To get you started, I've added a ``tests`` folder to ``cleanup`` and added one P
 
 For now, start with ``tests/test_model.py``. I wrote one unit test for you as an example; you write the other. 
 
+As you're adding unit tests to a project- if you run ``pytest --cov``, it will run the unit tests and print out a report showing your coverage (what fraction of statements are covered by a unit test) in each Python file.
+
 6. Unit tests with fixtures
 ===========================
 
@@ -124,19 +126,19 @@ If your code automates simple workflows that you repeat frequently, a command-li
 
 The ``argparse`` library comes with Python and is a really easy tool for building simple CLIs. If you want to build complex CLIs (for example, to make interfaces you can compose between different packages), the ``click`` package provides more functionality (but is also significantly more complicated).
 
-I've built a simple CLI in the file ``cli.py``, using ``argparse`` to parse the user's inputs, then just runs through the code we built above (if you used different function names or inputs, you'll have to update them in this file).
+I've built a simple CLI in the file ``cli.py``. It uses ``argparse`` to parse the user's inputs, then just runs through the code we built above (if you used different function names or inputs, you'll have to update them in this file).
 
 If you run the following from the command line:
 
 >>> python cli.py --help
 
-`argparse` will print out documentation on how to use the interface. Using the CLI to actually build a figure would look like:
+``argparse`` will print out documentation on how to use the interface. Using the CLI to actually build a figure would look like:
 
 >>> python cli.py my_data.csv --outputfile my_figure.jpg --logging DEBUG
 
 Once you've tested it out, try adding more options to the CLI. There are some options in our code that would be useful to expose in the CLI (such as the name of the target column in your data, or the fraction to use for testing). The ``parser.add_argument()`` lines in ``cli.py`` are how you'd add additional options to the interface. 
 
-* Options with a ``--`` in front of the name are optional; use the ``default`` keyword argument to specify the default.
+* Options with a ``--`` in front of the name are optional; use the ``default`` keyword argument to specify what value to use if the user doesn't add this argument.
 * The ``help`` keyword argument tells ``argparse`` what to print out when you run the CLI with the ``--help`` flag.
 * The ``dtype`` keyword argument tells ``argparse`` what type of input to expect. Even though Python usually lets us play fast and loose with data types, I recommend always filling this in when you're using ``argparse``. It's not always great at inferring types, and when it guesses wrong your code will do weird stuff (for example, passing "False" to a CLI argument will default to the string variable ``"False"`` instead of the Boolean variable ``False``, which is *super* problematic since ``bool("False") == True``).
 
@@ -166,14 +168,6 @@ Now you should be able to run the CLI from anywhere, so long as your conda envir
 >>> randomforestplot path/to/data.csv --outputfile myplot.jpg --logging INFO
 
 
-* Free software: MIT license
-* Documentation: https://code-cleanup-clinic.readthedocs.io.
-
-
-Features
---------
-
-* TODO
 
 Credits
 -------
