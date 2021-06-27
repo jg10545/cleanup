@@ -117,6 +117,33 @@ For testing the code in ``load.py``, we need to add a **fixture-** in this case,
 
 If you're not a full-time developer, adding fixtures to a repo might be something you do once or twice a year. I have to look up how every time. But when you have that you're reusing and you want to be sure you can rely on it, spending a few minutes on the ``pytest`` documentation page isn't a huge effort.
 
+7. Build a simple command-line interface
+========================================
+
+Let's take what we've built
+
+The ``argparse`` library comes with Python and is a really easy tool for building simple CLIs. If you want to build complex CLIs (for example, to make interfaces you can compose between different packages), the ``click`` package provides more functionality (but is also significantly more complicated).
+
+I've built a simple CLI in the file ``cli.py``- it uses ``argparse`` to parse the user's inputs, then just runs through the code we built above (if you used different function names or inputs, you'll have to update them in this file).
+
+If you run the following from the command line:
+
+>>> python cli.py --help
+
+`argparse` will print out documentation on how to use the interface. Using the CLI to actually build a figure would look like:
+
+>>> python cli.py my_data.csv --outputfile my_figure.jpg --logging DEBUG
+
+The ``parser.add_argument()`` lines in ``cli.py`` are how you'd add additional options to the interface. 
+
+* Options with a ``--`` in front of the name are optional; use the ``default`` keyword argument to specify the default.
+* The ``help`` keyword argument tells ``argparse`` what to print out when you run the CLI with the ``--help`` flag.
+* The ``dtype`` keyword argument tells ``argparse`` what type of input to expect. Even though Python usually lets us play fast and loose with data types, I recommend always filling this in when you're using ``argparse``. 
+
+*
+
+
+
 
 * Free software: MIT license
 * Documentation: https://code-cleanup-clinic.readthedocs.io.
